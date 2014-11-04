@@ -1,0 +1,37 @@
+<%- include ../common/header %>
+
+<div class="chatroom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well" style="height: 400px;overflow-y: scroll;">
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <input type="text" class="form-control" value="" id="content"/>
+            </div>
+            <div class="col-md-2">
+                <input type="button" class="btn btn-success btn-block" value="Send" id="send-btn"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <script>
+
+            var socket = io();
+            $('#send-btn').click(function(){
+                socket.emit('chat message', $('#content').val());
+                $('#content').val('');
+                return false;
+            });
+            socket.on('chat message', function(msg){
+                var html = '<p><span class="label label-primary">'+msg+'</span> ：</p>';
+                $('.well').append(html);
+            });
+        </script>
+
+<%- include ../common/footer %>
