@@ -1,31 +1,28 @@
-
 exports.authorize = function (req, res) {
     res.locals = {
         'language': 'zh-cn',
         'title': 'nodejs_chatroom',
         'keywords': '',
         'description': '',
-        'author': ''
+        'author': '',
+        'auth' : req.session.userauth
     };
-    console.log(req.cookies.userauth);
     req.next();
 }
 
 exports.index = function (req, res) {
-
-
     res.render('site/site/index');
 };
 
 exports.chatroom = function (req, res) {
-    var auth = req.cookies.userauth || "";
-
+    var auth = req.session.userauth || {};
     if (!auth) {
         res.redirect('/');
+    } else {
+        res.render('site/site/chatroom', {
+            'auth': auth
+        });
     }
-
-
-    res.render('site/site/chatroom');
 }
 
 exports.doLogin = function (req, res) {
@@ -34,11 +31,17 @@ exports.doLogin = function (req, res) {
 
     if (!nickname || !genre) {
         res.redirect('/');
-    }else{
-        res.cookie('userauth', {
+    } else {
+        req.session.userauth = {
             nickname: nickname,
             genre: genre
-        })
+        };
         res.redirect('/chatroom');
     }
+}
+
+exports.doLogout = function (req, res) {
+    req.session.destroy();
+    req.locals.auth = null;
+    res.redirect('/');
 }

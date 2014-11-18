@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="well" style="height: 400px;overflow-y: scroll;">
-
+                    <ul></ul>
                 </div>
             </div>
         </div>
@@ -20,18 +20,45 @@
     </div>
 </div>
 
-        <script>
+<script>
+    var nickname = '<%=auth.nickname%>';
+    var genre = '<%=auth.genre%>';
 
-            var socket = io();
-            $('#send-btn').click(function(){
-                socket.emit('chat message', $('#content').val());
-                $('#content').val('');
-                return false;
-            });
-            socket.on('chat message', function(msg){
-                var html = '<p><span class="label label-primary">'+msg+'</span> ：</p>';
-                $('.well').append(html);
-            });
-        </script>
+    var socket = io.connect();
+
+    socket.on('chat history', function (data) {
+        data = data || [];
+        if (data.length > 0) {
+            for (var key in data) {
+                var message = data[key];
+                showMessage(message);
+            }
+        }
+    });
+    socket.on('chat message', showMessage);
+
+    $('#send-btn').click(sendMessage);
+    $('#content').keydown(function (e) {
+        if (e.keyCode == 13) sendMessage();
+    });
+    function sendMessage() {
+        var message = {
+            'nickname': nickname,
+            'genre': genre,
+            'time': new Date().getTime(),
+            'message': $('#content').val()
+        };
+        socket.emit('chat message', message);
+        $('#content').val('');
+    }
+    function showMessage(message){
+        var screen = $('.well ul');
+        var html = '<p><span class="label label-primary">' + message.nickname + '</span> : ' + message.message + '</p>';
+        screen.append(html);
+        $('.well').scrollTop(screen.height());
+    }
+
+
+</script>
 
 <%- include ../common/footer %>

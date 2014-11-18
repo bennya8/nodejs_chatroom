@@ -8,4 +8,5 @@ app.use(site.authorize);
 app.get('/', site.index);
 app.get('/chatroom', site.chatroom);
 app.post('/doLogin', site.doLogin);
+app.get('/doLogout',site.doLogout);
 app.get('*', site.index);
