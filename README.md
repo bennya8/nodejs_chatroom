@@ -2,5 +2,5 @@
 
 基于 Socket.io 和 Express4 开发的多人聊天室
 
-![Alt screen1](https://github.com/bennya8/nodejs_chatroom/raw/master/screenshots/1.PNG)
+![Alt screen1](https://raw.githubusercontent.com/bennya8/nodejs_chatroom/master/screenshots/1.png)
 
